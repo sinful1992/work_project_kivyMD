@@ -1,0 +1,252 @@
+from kivy.lang import Builder
+from kivy.properties import StringProperty, ObjectProperty
+from kivymd.uix.pickers import MDDatePicker
+from kivymd.app import MDApp
+import json
+
+KV = '''
+
+
+MDScreenManager:
+
+    MDScreen:
+        name: "main"
+        MDGridLayout:
+            cols: 1
+            MDRaisedButton:
+                text: "Enter payments"
+                pos_hint: {"y": .2, "center_x" : .5}
+                size_hint: 1, 1
+                on_release:
+                    root.current = "enter"
+            MDRaisedButton:
+                text: "Check payments"
+                pos_hint: {"y": .6, "center_x" : .5}
+                size_hint: 1, 1
+                on_release:
+                    root.current = "view"
+           
+        
+    MDScreen:
+        name: "enter"
+        MDFloatLayout:
+                
+            MDLabel:
+                text: "Date"
+                pos_hint: {"x" : 0, "center_y" : .9}
+                size_hint: .1, .1
+            MDIconButton:
+                icon: "calendar"    
+                pos_hint: {"center_x": .3, "center_y": .9}
+                size_hint: 0.1, .1
+                on_release: app.show_date_picker()
+            MDTextField:
+                id: date 
+                pos_hint: {"center_x" : 0.9, "center_y" : .9}
+                text: f"{x}"
+                text: ""  
+            MDLabel:
+                text: "Case id"
+                size_hint: .1, .1
+                pos_hint: {"x": 0, "center_y": .8}
+            MDTextField:
+                id: case_id
+                
+                pos_hint: {"center_x": .9, "center_y": .8}
+            MDLabel:
+                text: "Payment type"
+                size_hint: None, None
+                pos_hint: {"x": 0, "center_y": .7}
+            MDTextField:
+                id: payment_type
+                
+                pos_hint: {"center_x": .9, "center_y": .7}
+            MDLabel:
+                text: "Amount"
+                size_hint: .1, .1
+                pos_hint: {"x" : 0, "center_y": .6}
+            MDSwitch:
+                pos_hint: {"center_y" : 0.6, "center_x" : 0.3}
+                on_active: pass
+            MDTextField:
+                id: amount
+                size_hint: 1, .1
+                pos_hint: {"center_x": .9, "center_y": .6}
+            
+        MDRaisedButton:
+            text: "Submit"
+            pos_hint: {"y": .2, "center_x" : .5}
+            size_hint: 1, 0.2
+            on_release: app.add_payment()
+           
+        MDRaisedButton:
+            text: "Go back"
+            pos_hint: {"y": 0, "center_x" : .5}
+            size_hint: 1, 0.2
+            on_release:
+                root.current = "main"        
+            
+        
+
+    MDScreen:
+        name: "view"
+        MDFloatLayout:
+            MDScrollView:
+                MDLabel:
+                    id: print_date
+                    text: "hahahahaa"
+                    pos_hint: {"x" : 0, "y" : .6}
+                    size_hint: .6, .5
+           
+            MDTextField:
+                id: show_date
+                mode: "rectangle"
+                pos_hint: {"x" : .5, "y" : .7}
+                size_hint: .45, .1
+                    
+            MDIconButton:
+                icon: "calendar"    
+                pos_hint: {"center_x": .7, "center_y": .9}
+                size_hint: 1, .1
+                on_release: app.show_date_picker_1()
+                        
+
+            MDRaisedButton:
+                text: "Check payments"
+                pos_hint: {"y" : .2}
+                size_hint: 1, 0.1
+                on_release:
+                    app.view_payment()
+            MDRaisedButton:
+                text: "Total"
+                pos_hint: {"y" : .1}
+                size_hint: 1, 0.1
+                on_release:
+                    app.total()
+
+
+            MDRaisedButton:
+                text: "Go back"
+                pos_hint: {"y" : 0}
+                size_hint: 1, 0.1
+                on_release:
+                    root.current = "main"
+            
+    
+'''
+payments = {}
+file = "work.json"
+
+class Test(MDApp):
+    def build(self):
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette = "Orange"
+        return Builder.load_string(KV)
+
+    def on_save(self, instance, value, date_range):
+        '''sets the date in Add payment'''
+        self.root.ids.date.text = str(value)
+        print(value)
+    def on_save_1(self, instance, value, date_range):
+        '''sets the date in view payment'''
+        self.root.ids.show_date.text = str(value)
+
+    def on_cancel(self, instance, value):
+        '''Events called when the "CANCEL" dialog box button is clicked.'''
+
+    def show_date_picker(self):
+        '''calls the date picker in add payment window'''
+        date_dialog = MDDatePicker()
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
+        
+    def show_date_picker_1(self):
+        '''calls the date picker in view window'''
+        date_dialog = MDDatePicker()
+        date_dialog.bind(on_save=self.on_save_1, on_cancel=self.on_cancel)
+        date_dialog.open()
+        ##########################################
+    def add_payment(self):
+        """creates dictionary entry and saves it."""
+        
+        # sets date as user input in date field
+        date = self.root.ids.date.text 
+        # sets case_id as user input in case_id field
+        case_id = self.root.ids.case_id.text
+        # sets amount as user input in amount field
+        amount = self.root.ids.amount.text
+        # sets payment_type as user input in payment_type field
+        payment_type = self.root.ids.payment_type.text
+        try:
+            self._extracted_from_add_payment_11(date, case_id, payment_type, amount)
+        except ValueError as Error:
+            self._extracted_from_add_payment_11(date, case_id, payment_type, amount)
+
+    # TODO Rename this here and in `add_payment`
+    def _extracted_from_add_payment_11(self, date, case_id, payment_type, amount):
+        # checks if json file exists if it doesnt creates it if it does it dumps payments in it
+        try:
+            with open(file, 'x') as f:
+                payments = {}
+                j = json.dump(payments, f)
+        except FileExistsError:
+            with open(file, 'r') as f:
+                payments = json.load(f)               
+            
+        #creates entry in dictionary if date exists appends it if not creates an entry
+        if date not in payments:
+            payments[date] = []
+        payments[date].append(
+            {
+                "Case id" : case_id,
+                "Payment type" : payment_type,
+                "Amount" : amount
+            })
+        #resets the input fields to empty
+        self.root.ids.case_id.text = ''
+        self.root.ids.amount.text = ''
+        self.root.ids.payment_type.text = ''
+        #dumps data in json
+        with open(file, 'w') as f:
+            j = json.dump(payments, f)   
+            
+    def view_payment(self):
+        """finds entry in dictionary and puts all matches to a label"""
+        
+        #sets date as input from date field
+        date = self.root.ids.show_date.text
+        #sets print_date label to empty
+        self.root.ids.print_date.text = ""
+        #loads data from json
+        with open(file, 'r') as f:
+            payments = json.load(f)
+            #if it finds entry puts it in a label if not sets label text as date does not exist
+            try:
+                for b, i in enumerate(payments.get(date, None), start=0):
+                    self.root.ids.print_date.text += f"{b+1}. Case id:{payments[date][b].get('Case id')}, Payment type:{payments[date][b].get('Payment type')}, Amount:{payments[date][b].get('Amount')}.\n" 
+            except (KeyError, TypeError) as error: # handle file not found on first launch
+                date = self.root.ids.show_date.text
+                self.root.ids.print_date.text = "No payments or wrong date"
+                
+    def total(self):
+        """finds entrys in specific date and sums them up"""
+        
+        #sets date as input from show_date field
+        date = self.root.ids.show_date.text
+        #resets print_date label to empty
+        self.root.ids.print_date.text = ''
+        total1 = 0
+        # finds required dates amount entrys and sums them
+        try:
+            with open(file, 'r') as f:
+                payments = json.load(f)
+                for i in payments[date]:
+                    _ = i.get('Amount')
+                    total1 += int(_)
+                #displays the sum in print_date label
+                self.root.ids.print_date.text += str(total1)  
+        except (KeyError,ValueError) as Error:
+            self.root.ids.print_date.text = 'Date does not exist'
+
+
+Test().run()
