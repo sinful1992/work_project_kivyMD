@@ -28,26 +28,26 @@ MDScreenManager:
            
         
     MDScreen:
+    #----------------------------------------------------------------------------------------------------------------------
         name: "enter"
         MDFloatLayout:
                 
             MDLabel:
                 text: "Date"
                 pos_hint: {"x" : 0, "center_y" : .9}
-                size_hint: .1, .1
+                size_hint: None, None
             MDIconButton:
                 icon: "calendar"    
                 pos_hint: {"center_x": .3, "center_y": .9}
-                size_hint: 0.1, .1
+                
                 on_release: app.show_date_picker()
             MDTextField:
                 id: date 
                 pos_hint: {"center_x" : 0.9, "center_y" : .9}
-                text: f"{x}"
                 text: ""  
             MDLabel:
                 text: "Case id"
-                size_hint: .1, .1
+                
                 pos_hint: {"x": 0, "center_y": .8}
             MDTextField:
                 id: case_id
@@ -59,18 +59,17 @@ MDScreenManager:
                 pos_hint: {"x": 0, "center_y": .7}
             MDTextField:
                 id: payment_type
-                
                 pos_hint: {"center_x": .9, "center_y": .7}
             MDLabel:
                 text: "Amount"
-                size_hint: .1, .1
+                
                 pos_hint: {"x" : 0, "center_y": .6}
             MDSwitch:
                 pos_hint: {"center_y" : 0.6, "center_x" : 0.3}
                 on_active: pass
             MDTextField:
                 id: amount
-                size_hint: 1, .1
+                
                 pos_hint: {"center_x": .9, "center_y": .6}
             
         MDRaisedButton:
@@ -84,7 +83,8 @@ MDScreenManager:
             pos_hint: {"y": 0, "center_x" : .5}
             size_hint: 1, 0.2
             on_release:
-                root.current = "main"        
+                root.current = "main"  
+    #---------------------------------------------------------------------------------------------------------------      
             
         
 
@@ -94,20 +94,24 @@ MDScreenManager:
             MDScrollView:
                 MDLabel:
                     id: print_date
-                    text: "hahahahaa"
-                    pos_hint: {"x" : 0, "y" : .6}
-                    size_hint: .6, .5
+                    text: "Nothing to display"
+                    pos_hint: {"center_x" : 0, "y" : .6}
+                    size_hint: .4, None
+                    text_size: self.width, None
+                    height: self.texture_size[1]
+                    halign: "left"
+                    
            
             MDTextField:
                 id: show_date
                 mode: "rectangle"
                 pos_hint: {"x" : .5, "y" : .7}
-                size_hint: .45, .1
+                
                     
             MDIconButton:
                 icon: "calendar"    
                 pos_hint: {"center_x": .7, "center_y": .9}
-                size_hint: 1, .1
+                size_hint: None, None
                 on_release: app.show_date_picker_1()
                         
 
