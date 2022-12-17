@@ -39,19 +39,16 @@ MDScreenManager:
             MDIconButton:
                 icon: "calendar"    
                 pos_hint: {"center_x": .3, "center_y": .9}
-                
                 on_release: app.show_date_picker()
             MDTextField:
                 id: date 
                 pos_hint: {"center_x" : 0.9, "center_y" : .9}
                 text: ""  
             MDLabel:
-                text: "Case id"
-                
+                text: "Case id"              
                 pos_hint: {"x": 0, "center_y": .8}
             MDTextField:
                 id: case_id
-                
                 pos_hint: {"center_x": .9, "center_y": .8}
             MDLabel:
                 text: "Payment type"
@@ -62,14 +59,12 @@ MDScreenManager:
                 pos_hint: {"center_x": .9, "center_y": .7}
             MDLabel:
                 text: "Amount"
-                
                 pos_hint: {"x" : 0, "center_y": .6}
             MDSwitch:
                 pos_hint: {"center_y" : 0.6, "center_x" : 0.3}
-                on_active: pass
+                on_active: app.on_checkbox_active(*args)
             MDTextField:
                 id: amount
-                
                 pos_hint: {"center_x": .9, "center_y": .6}
             
         MDRaisedButton:
@@ -169,6 +164,17 @@ class Test(MDApp):
         date_dialog = MDDatePicker()
         date_dialog.bind(on_save=self.on_save_1, on_cancel=self.on_cancel)
         date_dialog.open()
+        
+        
+    
+    def on_checkbox_active(self, checkbox, value):
+        
+        if value:
+            payment_amount = float(self.root.ids.amount.text) * 1.5
+        else: 
+            payment_amount = float(self.root.ids.amount.text) / 1.5
+
+        self.root.ids.amount.text = str(payment_amount)
         ##########################################
     def add_payment(self):
         """creates dictionary entry and saves it."""
@@ -245,10 +251,10 @@ class Test(MDApp):
             with open(file, 'r') as f:
                 payments = json.load(f)
                 for i in payments[date]:
-                    _ = i.get('Amount')
-                    total1 += int(_)
-                #displays the sum in print_date label
-                self.root.ids.print_date.text += str(total1)  
+                    # if there is no value it skips it and look for other entry 
+                    if amount := i.get('Amount'):
+                        total1 += float(amount)
+                self.root.ids.print_date.text += str(total1)
         except (KeyError,ValueError) as Error:
             self.root.ids.print_date.text = 'Date does not exist'
 
