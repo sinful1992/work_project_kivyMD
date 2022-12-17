@@ -1,6 +1,7 @@
 from kivy.lang import Builder
 from kivy.properties import StringProperty, ObjectProperty
 from kivymd.uix.pickers import MDDatePicker
+from kivymd.uix.pickers.datepicker import DatePickerInputField
 from kivymd.app import MDApp
 import json
 
@@ -14,12 +15,14 @@ MDScreenManager:
         MDGridLayout:
             cols: 1
             MDRaisedButton:
+                font_size: "32sp"
                 text: "Enter payments"
                 pos_hint: {"y": .2, "center_x" : .5}
                 size_hint: 1, 1
                 on_release:
                     root.current = "enter"
             MDRaisedButton:
+                font_size: "32sp"
                 text: "Check payments"
                 pos_hint: {"y": .6, "center_x" : .5}
                 size_hint: 1, 1
@@ -37,11 +40,15 @@ MDScreenManager:
                 pos_hint: {"x" : 0, "center_y" : .9}
                 size_hint: None, None
             MDIconButton:
-                icon: "calendar"    
+                icon: "calendar"  
                 pos_hint: {"center_x": .3, "center_y": .9}
                 on_release: app.show_date_picker()
             MDTextField:
                 id: date 
+                helper_text: "Enter a valid date yyyy/mm/dd "
+                date_format: 'yyyy/mm/dd'
+                validator: "date"
+                hint_text: "Enter date"
                 pos_hint: {"center_x" : 0.9, "center_y" : .9}
                 text: ""  
             MDLabel:
@@ -49,13 +56,15 @@ MDScreenManager:
                 pos_hint: {"x": 0, "center_y": .8}
             MDTextField:
                 id: case_id
+                hint_text: "Enter case id"
                 pos_hint: {"center_x": .9, "center_y": .8}
             MDLabel:
                 text: "Payment type"
-                size_hint: None, None
+                size_hint: 1, None
                 pos_hint: {"x": 0, "center_y": .7}
             MDTextField:
                 id: payment_type
+                hint_text: "Payment type"
                 pos_hint: {"center_x": .9, "center_y": .7}
             MDLabel:
                 text: "Amount"
@@ -65,18 +74,19 @@ MDScreenManager:
                 on_active: app.on_checkbox_active(*args)
             MDTextField:
                 id: amount
+                hint_text: "Enter amount"
                 pos_hint: {"center_x": .9, "center_y": .6}
             
         MDRaisedButton:
             text: "Submit"
             pos_hint: {"y": .2, "center_x" : .5}
-            size_hint: 1, 0.2
+            size_hint: 1, 0.3
             on_release: app.add_payment()
            
         MDRaisedButton:
             text: "Go back"
             pos_hint: {"y": 0, "center_x" : .5}
-            size_hint: 1, 0.2
+            size_hint: 1, 0.25
             on_release:
                 root.current = "main"  
     #---------------------------------------------------------------------------------------------------------------      
@@ -144,11 +154,11 @@ class Test(MDApp):
 
     def on_save(self, instance, value, date_range):
         '''sets the date in Add payment'''
-        self.root.ids.date.text = str(value)
+        self.root.ids.date.text = str(value.strftime("%Y/%m/%d"))
         print(value)
     def on_save_1(self, instance, value, date_range):
         '''sets the date in view payment'''
-        self.root.ids.show_date.text = str(value)
+        self.root.ids.show_date.text = str(value.strftime("%Y/%m/%d"))
 
     def on_cancel(self, instance, value):
         '''Events called when the "CANCEL" dialog box button is clicked.'''
