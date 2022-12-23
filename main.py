@@ -2,6 +2,7 @@ from kivy.lang import Builder
 from kivymd.uix.scrollview import MDScrollView
 from kivy.properties import StringProperty, ObjectProperty
 from kivymd.uix.pickers import MDDatePicker
+from kivy.core.window import Window
 from kivymd.app import MDApp
 
 import json
@@ -189,6 +190,7 @@ MDScreenManager:
 '''
 payments = {}
 file = "work.json"
+Window.softinput_mode = 'below_target'
 
 class Test(MDApp):
     def build(self):
