@@ -3,7 +3,7 @@ from kivymd.uix.scrollview import MDScrollView
 from kivy.properties import StringProperty, ObjectProperty
 from kivymd.uix.pickers import MDDatePicker
 from kivymd.app import MDApp
-from kivy.core.window import Window
+
 import json
 
 KV = '''
