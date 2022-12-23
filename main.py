@@ -84,7 +84,7 @@ MDScreenManager:
                     on_active: app.on_checkbox_active(*args)
                 MDTextField:
                     id: amount
-                    hint_text: "Enter amount"
+                    hint_text: "Enter amount payed"
                     pos_hint: {"center_x": .9, "center_y": .6}
                 MDTextField:
                     id: comp_fees
