@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ main ]
+    branches: [ 6-keybord-covering-input ]
 
 jobs:
   build:
