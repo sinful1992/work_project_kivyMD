@@ -100,7 +100,7 @@ MDScreenManager:
                     pos_hint: {"x" : 0, "center_y": .5}
                 MDTextField:
                     id: full_amount
-                    hint_text: "Full amount"
+                    hint_text: "Full debt amount"
                     helper_text: "Only use when calculating part payment "
                     input_type: "number"
                     helper_text_mode: "persistent"
@@ -284,15 +284,20 @@ class Test(MDApp):
         
         enf_fee = 235
         comp_fee = 75
-        full_comp_fee = comp_fee * int(self.root.ids.comp_fees.text)
-        full_amount = int(self.root.ids.full_amount.text)
-        payed = int(self.root.ids.amount.text)
-
-
-        x = (enf_fee / (full_amount - full_comp_fee) * (payed - full_comp_fee)) + full_comp_fee / 2
-        self.root.ids.comp_fees.text = ""
-        self.root.ids.full_amount.text = ""
-        self.root.ids.amount.text = f"{x:.2f}"
+        
+        try:   
+            self.root.ids.comp_fees.hint_text = "Compliance fees"
+            self.root.ids.full_amount.hint_text = "Full debt amount"
+            payed = int(self.root.ids.amount.text) 
+            full_comp_fee = comp_fee * int(self.root.ids.comp_fees.text)
+            full_amount = int(self.root.ids.full_amount.text)
+            x = (enf_fee / (full_amount - full_comp_fee) * (payed - full_comp_fee)) + full_comp_fee / 2
+            self.root.ids.comp_fees.text = ""
+            self.root.ids.full_amount.text = ""
+            self.root.ids.amount.text = f"{x:.2f}"
+        except ValueError as Error:
+            self.root.ids.comp_fees.hint_text = "Please enter correct amount"
+            self.root.ids.full_amount.hint_text = "Please enter correct amount"
             
     def view_payment(self):
         """finds entry in dictionary and puts all matches to a label"""
