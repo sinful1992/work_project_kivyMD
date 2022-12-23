@@ -1,5 +1,6 @@
 from kivy.lang import Builder
 from kivymd.uix.scrollview import MDScrollView
+from kivymd.uix.screenmanager import MDScreenManager
 from kivy.properties import StringProperty, ObjectProperty
 from kivymd.uix.pickers import MDDatePicker
 from kivy.core.window import Window
@@ -11,6 +12,7 @@ KV = '''
 
 
 MDScreenManager:
+    
 
     MDScreen:
         name: "main"
@@ -29,12 +31,13 @@ MDScreenManager:
                 pos_hint: {"y": .6, "center_x" : .5}
                 size_hint: 1, 1
                 on_release:
-                    root.current = "view"
+                    root.current = "view" 
            
         
     MDScreen:
     #----------------------------------------------------------------------------------------------------------------------
         name: "enter"
+        
         ScrollView:
             do_scroll_x: False
             do_scroll_y: True
@@ -193,14 +196,26 @@ MDScreenManager:
 '''
 payments = {}
 file = "work.json"
-Window.softinput_mode = 'below_target'
+Window.softinput_mode = 'below_target' 
+     
+    
 
 class Test(MDApp):
+
     def build(self):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
+        Window.bind(on_keyboard = self.keyboard)  
         return Builder.load_string(KV)
-
+    
+    def keyboard(self,window,key,*args):
+        """Listens for esc key"""
+        #if its not main screen and you press esc it will go back to main
+        if key != 27 or self.root.current == "main":
+            return False  
+        self.root.current = 'main'
+        return True   
+    
     def on_save(self, instance, value, date_range):
         '''sets the date in Add payment'''
         self.root.ids.date.text = str(value.strftime("%Y/%m/%d"))
@@ -234,6 +249,7 @@ class Test(MDApp):
             payment_amount = float(self.root.ids.amount.text) / 1.5
 
         self.root.ids.amount.text = str(payment_amount)
+        
         ##########################################
     def add_payment(self):
         """creates dictionary entry and saves it."""
