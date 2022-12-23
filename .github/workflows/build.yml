@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ main ]
+    branches: [ 1-way-of-calculating-bonus-if-not-a-pif ]
 
 jobs:
   build:
