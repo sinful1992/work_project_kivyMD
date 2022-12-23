@@ -1,8 +1,9 @@
 from kivy.lang import Builder
+from kivymd.uix.scrollview import MDScrollView
 from kivy.properties import StringProperty, ObjectProperty
 from kivymd.uix.pickers import MDDatePicker
-from kivymd.uix.pickers.datepicker import DatePickerInputField
 from kivymd.app import MDApp
+
 import json
 
 KV = '''
@@ -33,103 +34,146 @@ MDScreenManager:
     MDScreen:
     #----------------------------------------------------------------------------------------------------------------------
         name: "enter"
-        MDFloatLayout:
-                
-            MDLabel:
-                text: "Date"
-                pos_hint: {"x" : 0, "center_y" : .9}
-                size_hint: None, None
-            MDIconButton:
-                icon: "calendar"  
-                pos_hint: {"center_x": .3, "center_y": .9}
-                on_release: app.show_date_picker()
-            MDTextField:
-                id: date 
-                helper_text: "Enter a valid date yyyy/mm/dd "
-                date_format: 'yyyy/mm/dd'
-                validator: "date"
-                hint_text: "Enter date"
-                pos_hint: {"center_x" : 0.9, "center_y" : .9}
-                text: ""  
-            MDLabel:
-                text: "Case id"              
-                pos_hint: {"x": 0, "center_y": .8}
-            MDTextField:
-                id: case_id
-                hint_text: "Enter case id"
-                pos_hint: {"center_x": .9, "center_y": .8}
-            MDLabel:
-                text: "Payment type"
-                size_hint: 1, None
-                pos_hint: {"x": 0, "center_y": .7}
-            MDTextField:
-                id: payment_type
-                hint_text: "Payment type"
-                pos_hint: {"center_x": .9, "center_y": .7}
-            MDLabel:
-                text: "Amount"
-                pos_hint: {"x" : 0, "center_y": .6}
-            MDSwitch:
-                pos_hint: {"center_y" : 0.6, "center_x" : 0.3}
-                on_active: app.on_checkbox_active(*args)
-            MDTextField:
-                id: amount
-                hint_text: "Enter amount"
-                pos_hint: {"center_x": .9, "center_y": .6}
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            bar_width: 10
+            always_overscroll: False
             
-        MDRaisedButton:
-            text: "Submit"
-            pos_hint: {"y": .2, "center_x" : .5}
-            size_hint: 1, 0.3
-            on_release: app.add_payment()
-           
-        MDRaisedButton:
-            text: "Go back"
-            pos_hint: {"y": 0, "center_x" : .5}
-            size_hint: 1, 0.25
-            on_release:
-                root.current = "main"  
+            MDFloatLayout:
+                size_hint_y: None
+                always_overscroll: False
+                
+                size: root.width, root.height*1.01   
+                MDLabel:
+                    text: "Date"
+                    pos_hint: {"x" : 0, "center_y" : .9}
+                    size_hint: None, None
+                MDIconButton:
+                    icon: "calendar"  
+                    pos_hint: {"center_x": .3, "center_y": .9}
+                    on_release: app.show_date_picker()
+                MDTextField:
+                    id: date 
+                    helper_text: "Enter a valid date yyyy/mm/dd "
+                    date_format: 'yyyy/mm/dd'
+                    validator: "date"
+                    hint_text: "Enter date"
+                    pos_hint: {"center_x" : 0.9, "center_y" : .9}
+                    text: ""  
+                MDLabel:
+                    text: "Case id"              
+                    pos_hint: {"x": 0, "center_y": .8}
+                MDTextField:
+                    id: case_id
+                    hint_text: "Enter case id"
+                    pos_hint: {"center_x": .9, "center_y": .8}
+                MDLabel:
+                    text: "Payment type"
+                    size_hint: 1, None
+                    pos_hint: {"x": 0, "center_y": .7}
+                MDTextField:
+                    id: payment_type
+                    hint_text: "Payment type"
+                    pos_hint: {"center_x": .9, "center_y": .7}
+                MDLabel:
+                    text: "Amount"
+                    pos_hint: {"x" : 0, "center_y": .6}
+                MDSwitch:
+                    pos_hint: {"center_x" : 0.3, "center_y" : 0.6}
+                    on_active: app.on_checkbox_active(*args)
+                MDTextField:
+                    id: amount
+                    hint_text: "Enter amount payed"
+                    pos_hint: {"center_x": .9, "center_y": .6}
+                MDTextField:
+                    id: comp_fees
+                    hint_text: "Compliance fees"
+                    helper_text: "Only use when calculating part payment "
+                    helper_text_mode: "persistent"
+                    pos_hint: {"center_x": .9, "center_y": .5}
+                MDLabel:
+                    text: "Compliance fees"
+                    pos_hint: {"x" : 0, "center_y": .5}
+                MDTextField:
+                    id: full_amount
+                    hint_text: "Full amount"
+                    helper_text: "Only use when calculating part payment "
+                    helper_text_mode: "persistent"
+                    pos_hint: {"center_x": .9, "center_y": .4}
+                MDLabel:
+                    text: "Full amount"
+                    pos_hint: {"x" : 0, "center_y": .4}
+                
+                MDRaisedButton:
+                    text: "Submit"
+                    pos_hint: {"y": .2, "center_x" : .5}
+                    size_hint: 1, 0.09
+                    on_release: app.add_payment()
+                MDRaisedButton:
+                    text: "Calculate"
+                    pos_hint: {"y": .105, "center_x" : .5}
+                    size_hint: 1, 0.09
+                    on_release: 
+                        app.part_payment()
+                   
+                MDRaisedButton:
+                    text: "Go back"
+                    pos_hint: {"y": 0.01, "center_x" : .5}
+                    size_hint: 1, 0.09
+                    on_release:
+                        root.current = "main"  
     #---------------------------------------------------------------------------------------------------------------      
             
         
 
     MDScreen:
         name: "view"
-        MDFloatLayout:
-            MDScrollView:
-                MDLabel:
-                    id: print_date
-                    text: "Nothing to display"
-                    pos_hint: {"center_x" : 0, "y" : .6}
-                    size_hint: .4, None
-                    text_size: self.width, None
-                    height: self.texture_size[1]
-                    halign: "left"
+        MDGridLayout:
+            cols: 1
+            
+            MDGridLayout:
+
+                padding: 10, 10
+                cols: 3
+                ScrollView:
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    bar_width: 10
+                    size_hint: 1, 1
+                    always_overscroll: False
+
+                    MDLabel:
+                        id: print_date
+                        text: "Nothing to display"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text_size: self.width, None
+                        
+                MDTextField:
+                    id: show_date
+                    mode: "rectangle"
                     
-           
-            MDTextField:
-                id: show_date
-                mode: "rectangle"
-                pos_hint: {"x" : .5, "y" : .7}
+                   
+
+                MDIconButton:
+                    icon: "calendar"    
+                    
+                    on_release: app.show_date_picker_1()
+
                 
                     
-            MDIconButton:
-                icon: "calendar"    
-                pos_hint: {"center_x": .7, "center_y": .9}
-                size_hint: None, None
-                on_release: app.show_date_picker_1()
-                        
-
+                    
             MDRaisedButton:
                 text: "Check payments"
                 pos_hint: {"y" : .2}
-                size_hint: 1, 0.1
+                size_hint: 1, 0.2
                 on_release:
                     app.view_payment()
             MDRaisedButton:
                 text: "Total"
                 pos_hint: {"y" : .1}
-                size_hint: 1, 0.1
+                size_hint: 1, 0.2
                 on_release:
                     app.total()
 
@@ -137,7 +181,7 @@ MDScreenManager:
             MDRaisedButton:
                 text: "Go back"
                 pos_hint: {"y" : 0}
-                size_hint: 1, 0.1
+                size_hint: 1, 0.2
                 on_release:
                     root.current = "main"
             
@@ -230,6 +274,21 @@ class Test(MDApp):
         with open(file, 'w') as f:
             j = json.dump(payments, f)   
             
+    def part_payment(self):
+        """calculates part payment fees"""
+        
+        enf_fee = 235
+        comp_fee = 75
+        full_comp_fee = comp_fee * int(self.root.ids.comp_fees.text)
+        full_amount = int(self.root.ids.full_amount.text)
+        payed = int(self.root.ids.amount.text)
+
+
+        x = (enf_fee / (full_amount - full_comp_fee) * (payed - full_comp_fee)) + full_comp_fee / 2
+        self.root.ids.comp_fees.text = ""
+        self.root.ids.full_amount.text = ""
+        self.root.ids.amount.text = f"{x:.2f}"
+            
     def view_payment(self):
         """finds entry in dictionary and puts all matches to a label"""
         
@@ -270,3 +329,4 @@ class Test(MDApp):
 
 
 Test().run()
+
