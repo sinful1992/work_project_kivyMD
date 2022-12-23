@@ -287,8 +287,7 @@ class Test(MDApp):
         x = (enf_fee / (full_amount - full_comp_fee) * (payed - full_comp_fee)) + full_comp_fee / 2
         self.root.ids.comp_fees.text = ""
         self.root.ids.full_amount.text = ""
-
-        self.root.ids.amount.text = f"{str(x)}"
+        self.root.ids.amount.text = f"{x:.2f}"
             
     def view_payment(self):
         """finds entry in dictionary and puts all matches to a label"""
