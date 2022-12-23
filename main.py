@@ -2,6 +2,7 @@ from kivy.lang import Builder
 from kivymd.uix.scrollview import MDScrollView
 from kivy.properties import StringProperty, ObjectProperty
 from kivymd.uix.pickers import MDDatePicker
+from kivy.core.window import Window
 from kivymd.app import MDApp
 
 import json
@@ -84,12 +85,14 @@ MDScreenManager:
                     on_active: app.on_checkbox_active(*args)
                 MDTextField:
                     id: amount
+                    input_type: "number"
                     hint_text: "Enter amount payed"
                     pos_hint: {"center_x": .9, "center_y": .6}
                 MDTextField:
                     id: comp_fees
                     hint_text: "Compliance fees"
                     helper_text: "Only use when calculating part payment "
+                    input_type: "number"
                     helper_text_mode: "persistent"
                     pos_hint: {"center_x": .9, "center_y": .5}
                 MDLabel:
@@ -99,6 +102,7 @@ MDScreenManager:
                     id: full_amount
                     hint_text: "Full amount"
                     helper_text: "Only use when calculating part payment "
+                    input_type: "number"
                     helper_text_mode: "persistent"
                     pos_hint: {"center_x": .9, "center_y": .4}
                 MDLabel:
@@ -189,6 +193,7 @@ MDScreenManager:
 '''
 payments = {}
 file = "work.json"
+Window.softinput_mode = 'below_target'
 
 class Test(MDApp):
     def build(self):
