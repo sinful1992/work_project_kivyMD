@@ -1,6 +1,6 @@
 from kivy.lang import Builder
 from kivymd.uix.scrollview import MDScrollView
-from kivymd.uix.screenmanager import MDScreenManager
+from kivy.base import EventLoop
 from kivy.properties import StringProperty, ObjectProperty
 from kivymd.uix.pickers import MDDatePicker
 from kivy.core.window import Window
@@ -205,7 +205,7 @@ class Test(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
-        Window.bind(on_keyboard = self.keyboard)  
+        EventLoop.window.bind(on_keyboard=self.keyboard)
         return Builder.load_string(KV)
     
     def keyboard(self,window,key,*args):
