@@ -194,6 +194,7 @@ MDScreenManager:
             
     
 '''
+dates = []
 payments = {}
 file = "work.json"
 Window.softinput_mode = 'below_target' 
@@ -219,10 +220,15 @@ class Test(MDApp):
     def on_save(self, instance, value, date_range):
         '''sets the date in Add payment'''
         self.root.ids.date.text = str(value.strftime("%Y/%m/%d"))
-        print(value)
     def on_save_1(self, instance, value, date_range):
         '''sets the date in view payment'''
-        self.root.ids.show_date.text = str(value.strftime("%Y/%m/%d"))
+        self.root.ids.show_date.text = f'{date_range[0].strftime("%Y/%m/%d")} - {date_range[-1].strftime("%Y/%m/%d")}'
+        dates.clear()
+        for date in date_range:
+            dates.append(date.strftime("%Y/%m/%d"))
+           
+        
+        
 
     def on_cancel(self, instance, value):
         '''Events called when the "CANCEL" dialog box button is clicked.'''
@@ -235,7 +241,7 @@ class Test(MDApp):
         
     def show_date_picker_1(self):
         '''calls the date picker in view window'''
-        date_dialog = MDDatePicker()
+        date_dialog = MDDatePicker(mode="range")
         date_dialog.bind(on_save=self.on_save_1, on_cancel=self.on_cancel)
         date_dialog.open()
         
@@ -304,7 +310,7 @@ class Test(MDApp):
         try:   
             self.root.ids.comp_fees.hint_text = "Compliance fees"
             self.root.ids.full_amount.hint_text = "Full debt amount"
-            payed = int(self.root.ids.amount.text) 
+            payed = float(self.root.ids.amount.text) 
             full_comp_fee = comp_fee * int(self.root.ids.comp_fees.text)
             full_amount = int(self.root.ids.full_amount.text)
             x = (enf_fee / (full_amount - full_comp_fee) * (payed - full_comp_fee)) + full_comp_fee / 2
@@ -317,9 +323,11 @@ class Test(MDApp):
             
     def view_payment(self):
         """finds entry in dictionary and puts all matches to a label"""
-        
         #sets date as input from date field
         date = self.root.ids.show_date.text
+        if len(date) < 20:
+            dates.clear()
+            dates.append(date)
         #sets print_date label to empty
         self.root.ids.print_date.text = ""
         #loads data from json
@@ -327,11 +335,19 @@ class Test(MDApp):
             payments = json.load(f)
             #if it finds entry puts it in a label if not sets label text as date does not exist
             try:
-                for b, i in enumerate(payments.get(date, None), start=0):
-                    self.root.ids.print_date.text += f"{b+1}. Case id:{payments[date][b].get('Case id')}, Payment type:{payments[date][b].get('Payment type')}, Amount:{payments[date][b].get('Amount')}.\n" 
+                for date in dates:
+                    if date not in payments:
+                        self.root.ids.print_date.text += f"{date}\n"
+                        self.root.ids.print_date.text += f"Empty\n"
+                    else:    
+                        self.root.ids.print_date.text += f"{date}\n"
+                        for b, i in enumerate(payments.get(date, None), start=0):
+                            self.root.ids.print_date.text += f"{b+1}. Case id:{payments[date][b].get('Case id')}, Payment type:{payments[date][b].get('Payment type')}, Amount:{payments[date][b].get('Amount')}.\n"   
             except (KeyError, TypeError) as error: # handle file not found on first launch
                 date = self.root.ids.show_date.text
                 self.root.ids.print_date.text = "No payments or wrong date"
+                
+            
                 
     def total(self):
         """finds entrys in specific date and sums them up"""
