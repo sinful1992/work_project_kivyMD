@@ -312,7 +312,7 @@ class Test(MDApp):
             self.root.ids.full_amount.hint_text = "Full debt amount"
             payed = float(self.root.ids.amount.text) 
             full_comp_fee = comp_fee * int(self.root.ids.comp_fees.text)
-            full_amount = int(self.root.ids.full_amount.text)
+            full_amount = float(self.root.ids.full_amount.text)
             x = (enf_fee / (full_amount - full_comp_fee) * (payed - full_comp_fee)) + full_comp_fee / 2
             self.root.ids.comp_fees.text = ""
             self.root.ids.full_amount.text = ""
@@ -364,10 +364,10 @@ class Test(MDApp):
                 for date in dates:
                     if date in payments:
                         for i in payments[date]:
-                            # if there is no value it skips it and look for other entry 
+                            # if there is no value it skips it and look for other entry
                             if amount := i.get('Amount'):
                                 total1 += float(amount)
-                                
+
                 self.root.ids.print_date.text += str(total1)
         except (KeyError,ValueError) as Error:
             self.root.ids.print_date.text = 'Date does not exist'
