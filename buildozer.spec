@@ -50,7 +50,6 @@ requirements = python3,kivy,kivyMD,pillow,
 #icon.filename = %(source.dir)s/data/icon.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
-orientation = landscape
 orientation = portrait
 
 # (list) List of service to declare
