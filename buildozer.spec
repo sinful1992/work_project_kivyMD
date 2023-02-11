@@ -94,7 +94,7 @@ fullscreen = 0
 #icon.adaptive_background.filename = %(source.dir)s/data/icon_bg.png
 
 # (list) Permissions
-#android.permissions = INTERNET, STORAGE
+#android.permissions = INTERNET
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
@@ -242,6 +242,10 @@ fullscreen = 0
 
 # (str) launchMode to set for the main activity
 #android.manifest.launch_mode = standard
+
+# (str) screenOrientation to set for the main activity.
+# Valid values can be found at https://developer.android.com/guide/topics/manifest/activity-element
+#android.manifest.orientation = fullSensor
 
 # (list) Android additional libraries to copy into libs/armeabi
 #android.add_libs_armeabi = libs/android/*.so
