@@ -216,14 +216,14 @@ MDScreenManager:
                     always_overscroll: False
 
                     MDLabel:
-                        id: print_date
+                        id: show_payment
                         text: "Nothing to display"
                         size_hint_y: None
                         height: self.texture_size[1]
                         text_size: self.width, None
                         
                 MDTextField:
-                    id: show_date
+                    id: find_payment
                     mode: "rectangle"
                     
 
@@ -235,7 +235,7 @@ MDScreenManager:
                 pos_hint: {"y" : .2}
                 size_hint: 1, 0.2
                 on_release:
-                    app.view_payment()
+                    app.find_payment()
             MDRaisedButton:
                 text: "delete payment"
                 pos_hint: {"y" : .1}
@@ -433,6 +433,24 @@ class Test(MDApp):
                 self.root.ids.print_date.text += str(total1)
         except (KeyError,ValueError) as Error:
             self.root.ids.print_date.text = 'Date does not exist'
+            
+    def find_payment(self):
+        self.root.ids.show_payment.text = ""
+        payment = str(self.root.ids.find_payment.text)
+        with open(file, 'r') as f:
+            payments = json.load(f)
+            for date in payments: 
+                for case in payments[date]:
+                    for i in case.items():
+                        if payment in i:
+                            self.root.ids.show_payment.text += f'{date}\n{case}'
+                            print(date)
+                            print(case)
+                        
+                    
+                    
+                
+                
 
 
 Test().run()
