@@ -444,8 +444,7 @@ class Test(MDApp):
                     for i in case.items():
                         if payment in i:
                             self.root.ids.show_payment.text += f'{date}\n{case}'
-                            print(date)
-                            print(case)
+                            
                         
                     
                     
