@@ -21,17 +21,22 @@ MDScreenManager:
             MDRaisedButton:
                 font_size: "32sp"
                 text: "Enter payments"
-                pos_hint: {"y": .2, "center_x" : .5}
-                size_hint: 1, 1
+                size_hint: 1, .7
                 on_release:
                     root.current = "enter"
             MDRaisedButton:
                 font_size: "32sp"
                 text: "Check payments"
-                pos_hint: {"y": .6, "center_x" : .5}
-                size_hint: 1, 1
+                size_hint: 1, .7
                 on_release:
                     root.current = "view" 
+            MDRaisedButton:
+                font_size: "32sp"
+                text: "Find payment"
+                size_hint: 1, .7
+                on_release:
+                    root.current = "Find_Payment" 
+            
            
         
     MDScreen:
@@ -85,7 +90,7 @@ MDScreenManager:
                     pos_hint: {"x" : 0, "center_y": .6}
                 MDSwitch:
                     pos_hint: {"center_x" : 0.3, "center_y" : 0.6}
-                    on_active: app.on_checkbox_active(*args)
+                    on_active: app.on_checkbox_active(*args) 
                 MDTextField:
                     id: amount
                     input_type: "number"
@@ -191,6 +196,60 @@ MDScreenManager:
                 size_hint: 1, 0.2
                 on_release:
                     root.current = "main"
+
+#-----------------------------------------------------------------------------------------------------------------
+
+    MDScreen:
+        name: "Find_Payment"
+        MDGridLayout:
+            cols: 1
+            
+            MDGridLayout:
+
+                padding: 10, 10
+                cols: 3
+                ScrollView:
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    bar_width: 10
+                    size_hint: 1, 1
+                    always_overscroll: False
+
+                    MDLabel:
+                        id: print_date
+                        text: "Nothing to display"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text_size: self.width, None
+                        
+                MDTextField:
+                    id: show_date
+                    mode: "rectangle"
+                    
+
+                
+                    
+                    
+            MDRaisedButton:
+                text: "Find payment"
+                pos_hint: {"y" : .2}
+                size_hint: 1, 0.2
+                on_release:
+                    app.view_payment()
+            MDRaisedButton:
+                text: "delete payment"
+                pos_hint: {"y" : .1}
+                size_hint: 1, 0.2
+                on_release:
+                    app.total()
+
+
+            MDRaisedButton:
+                text: "Go back"
+                pos_hint: {"y" : 0}
+                size_hint: 1, 0.2
+                on_release:
+                    root.current = "main"
             
     
 '''
@@ -249,12 +308,15 @@ class Test(MDApp):
     
     def on_checkbox_active(self, checkbox, value):
         
-        if value:
-            payment_amount = float(self.root.ids.amount.text) * 1.5
-        else: 
-            payment_amount = float(self.root.ids.amount.text) / 1.5
+        if self.root.ids.amount.text:
+            if value:
+                payment_amount = float(self.root.ids.amount.text) * 1.5
+            else:
+                payment_amount = float(self.root.ids.amount.text) / 1.5
 
-        self.root.ids.amount.text = str(payment_amount)
+            self.root.ids.amount.text = str(payment_amount)
+
+        
         
         ##########################################
     def add_payment(self):
