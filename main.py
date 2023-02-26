@@ -241,7 +241,7 @@ MDScreenManager:
                 pos_hint: {"y" : .1}
                 size_hint: 1, 0.2
                 on_release:
-                    app.total()
+                    app.delete_payment()
 
 
             MDRaisedButton:
@@ -444,7 +444,22 @@ class Test(MDApp):
                     for i in case.items():
                         if payment in i:
                             self.root.ids.show_payment.text += f'{date}\n{case}'
+    
+    
+    def delete_payment(self):
+        payment = str(self.root.ids.find_payment.text)
+        with open(file, 'r') as f:
+            payments = json.load(f)
+            for date in payments: 
+                    for case in payments[date]:
+                        if payment in case.values():
+                            payments[date].remove(case)
+                            with open(file, 'w') as f:
+                                j = json.dump(payments, f)
                             
+                        
+                            
+        
                         
                     
                     
