@@ -44,9 +44,7 @@ jobs:
         sdkmanager --install "platform-tools" "platforms;android-30" "build-tools;30.0.3"
 
     - name: Prepare build environment
-      run: |
-        buildozer init
-        buildozer android clean
+      run: buildozer android clean
 
     - name: Build the APK
       run: buildozer -v android debug
