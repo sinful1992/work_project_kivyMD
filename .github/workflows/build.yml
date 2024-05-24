@@ -31,7 +31,7 @@ jobs:
         uses: ArtemSBulgakov/buildozer-action@v1
         id: buildozer
         with:
-          command: echo y | buildozer -v android debug
+          command: buildozer -v android debug
           buildozer_version: master
 
       - name: Upload artifacts
