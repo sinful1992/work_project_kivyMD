@@ -24,24 +24,29 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libssl-dev libffi-dev python3-dev
+        sudo apt-get install -y libssl-dev libffi-dev python3-dev git zip unzip
+        sudo apt-get install -y build-essential ccache libncurses5 libtool libffi-dev \
+                                libssl-dev autoconf automake cmake zlib1g-dev \
+                                zlib1g libjpeg-dev libfreetype6-dev
         pip install --upgrade pip setuptools
         pip install buildozer cython
 
     - name: Set up Android SDK
       run: |
-        sudo apt-get install -y wget unzip
+        sudo apt-get install -y wget
         wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
         mkdir -p $HOME/android-sdk/cmdline-tools
         unzip -q commandlinetools-linux-8512546_latest.zip -d $HOME/android-sdk/cmdline-tools
         mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
         export ANDROID_SDK_ROOT=$HOME/android-sdk
-        export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+        export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH
         yes | sdkmanager --licenses || true
         sdkmanager --install "platform-tools" "platforms;android-30" "build-tools;30.0.3"
 
     - name: Prepare build environment
-      run: buildozer android clean
+      run: |
+        buildozer init
+        buildozer android clean
 
     - name: Build the APK
       run: buildozer -v android debug
