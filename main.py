@@ -19,7 +19,7 @@ MDScreenManager:
         MDGridLayout:
             cols: 1
             MDRaisedButton:
-                font_size: "32sp"
+                font_size: "31sp"
                 text: "Enter payments"
                 size_hint: 1, .7
                 on_release:
