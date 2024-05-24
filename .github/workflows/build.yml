@@ -8,9 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
- 
       - uses: actions/checkout@v2
 
       - name: Get Date
@@ -29,7 +26,10 @@ jobs:
         with:
           path: .buildozer
           key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
-
+          
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+        
       - name: Build with Buildozer
         uses: ArtemSBulgakov/buildozer-action@v1
         id: buildozer
