@@ -34,17 +34,16 @@ jobs:
 
       - name: Install Android SDK
         run: |
-          mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
-          cd $ANDROID_SDK_ROOT/cmdline-tools
-          wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
-          unzip commandlinetools-linux-9123335_latest.zip -d $ANDROID_SDK_ROOT/cmdline-tools
-          mv $ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools $ANDROID_SDK_ROOT/cmdline-tools/latest
-          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+          mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/latest
+          wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip -O $ANDROID_SDK_ROOT/cmdline-tools/latest/commandlinetools.zip
+          unzip $ANDROID_SDK_ROOT/cmdline-tools/latest/commandlinetools.zip -d $ANDROID_SDK_ROOT/cmdline-tools/latest
+          rm $ANDROID_SDK_ROOT/cmdline-tools/latest/commandlinetools.zip
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/cmdline-tools/bin/sdkmanager --licenses
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/cmdline-tools/bin/sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
 
       - name: Install Android NDK
         run: |
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "ndk;21.4.7075529"
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/cmdline-tools/bin/sdkmanager "ndk;21.4.7075529"
 
       - name: Build with Buildozer
         run: buildozer android debug
