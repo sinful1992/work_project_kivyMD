@@ -47,18 +47,21 @@ jobs:
       run: |
         sudo apt-get install -y libltdl-dev lzop lxc zlib1g-dev
 
-    - name: Install Buildozer and dependencies
+    - name: Install Buildozer
       run: |
         pip install buildozer
 
     - name: Ensure build directories exist
       run: |
-        mkdir -p $HOME/.buildozer/android/platform
-        mkdir -p $HOME/.buildozer/android/platform/android-sdk
-        mkdir -p $HOME/.buildozer/android/platform/android-ndk-r21d
+        mkdir -p .buildozer/android/platform/android-sdk
+        mkdir -p .buildozer/android/platform/android-ndk-r21d
 
-    - name: Force fetch python-for-android
+    - name: Set up Android SDK in Buildozer
       run: |
+        export ANDROIDSDK="$HOME/android-sdk"
+        export ANDROIDNDK="$HOME/.buildozer/android/platform/android-ndk-r21d"
+        export ANDROIDAPI="30"
+        export ANDROIDMINAPI="21"
         buildozer android update
 
     - name: Prepare build environment
