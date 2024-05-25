@@ -41,11 +41,9 @@ jobs:
       - name: Install Android SDK
         run: |
           mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/latest
-          wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip -O $ANDROID_SDK_ROOT/cmdline-tools/latest/commandlinetools.zip
-          unzip -qq $ANDROID_SDK_ROOT/cmdline-tools/latest/commandlinetools.zip -d $ANDROID_SDK_ROOT/cmdline-tools/latest
-          rm $ANDROID_SDK_ROOT/cmdline-tools/latest/commandlinetools.zip
-          mv $ANDROID_SDK_ROOT/cmdline-tools/latest/cmdline-tools/* $ANDROID_SDK_ROOT/cmdline-tools/latest
-          rmdir $ANDROID_SDK_ROOT/cmdline-tools/latest/cmdline-tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -O android-sdk-tools.zip
+          unzip -qq android-sdk-tools.zip -d $ANDROID_SDK_ROOT/cmdline-tools/latest
+          rm android-sdk-tools.zip
           yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
           $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
 
