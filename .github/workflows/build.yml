@@ -1,4 +1,4 @@
-name: CI
+name: Build with Buildozer
 
 on:
   push:
@@ -32,18 +32,26 @@ jobs:
           pip install cython
           pip install buildozer
 
+      - name: Install Java JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
       - name: Install Android SDK
         run: |
           mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/latest
           wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip -O $ANDROID_SDK_ROOT/cmdline-tools/latest/commandlinetools.zip
-          unzip $ANDROID_SDK_ROOT/cmdline-tools/latest/commandlinetools.zip -d $ANDROID_SDK_ROOT/cmdline-tools/latest
+          unzip -qq $ANDROID_SDK_ROOT/cmdline-tools/latest/commandlinetools.zip -d $ANDROID_SDK_ROOT/cmdline-tools/latest
           rm $ANDROID_SDK_ROOT/cmdline-tools/latest/commandlinetools.zip
-          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/cmdline-tools/bin/sdkmanager --licenses
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/cmdline-tools/bin/sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+          mv $ANDROID_SDK_ROOT/cmdline-tools/latest/cmdline-tools/* $ANDROID_SDK_ROOT/cmdline-tools/latest
+          rmdir $ANDROID_SDK_ROOT/cmdline-tools/latest/cmdline-tools
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
 
       - name: Install Android NDK
         run: |
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/cmdline-tools/bin/sdkmanager "ndk;21.4.7075529"
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "ndk;21.4.7075529"
 
       - name: Build with Buildozer
         run: buildozer android debug
