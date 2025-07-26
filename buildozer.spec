@@ -17,6 +17,8 @@ source.dir = .
 # unless your app actually imports them at runtime.
 requirements = python3,kivy,pyjnius,pillow,requests
 
+source.include_exts = py,kv,png,jpg,ttf,atlas,json
+
 # (str) The entry point of your application (the main Python file)
 entrypoint = main.py
 
